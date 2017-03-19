@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lykfe/KimchiFriedRice.git"
+    "url": "git+https://github.com/bosung90/KimchiFriedRice.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kimchi Fried Rice Members! NWHACKS 2017",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lykfe/KimchiFriedRice/issues"
+    "url": "https://github.com/bosung90/KimchiFriedRice/issues"
   },
-  "homepage": "https://github.com/lykfe/KimchiFriedRice#readme",
+  "homepage": "https://github.com/bosung90/KimchiFriedRice#readme",
   "dependencies": {
     "pg-promise": "^5.6.4",
     "restify": "^4.3.0",
