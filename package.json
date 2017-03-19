@@ -28,7 +28,8 @@
     "babel-preset-env": "^1.2.2",
     "babel-preset-es2015": "^6.24.0"
   },
+  "engineStrict" : true,
   "engines" : { 
-    "node" : "latest" 
+    "node" : "^7.7.3" 
   }
 }
