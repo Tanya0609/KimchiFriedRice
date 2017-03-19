@@ -89,6 +89,37 @@ server.post('/subscription/create', function (req, res, next) {
         return next();
       });
   }
+
+//GET A LIST OF SUBSCRIBERS
+server.get('/subscription/:businessId', function (req, res, next) {
+  let businessId = req.params.businessId;
+  return db.query('SELECT * FROM subscriptions where business_id='+businessId+';')
+  .then((response)=>{
+    console.log(response)
+    res.send(response);
+    return next();
+  })
+  .catch((err) => {
+    res.send(err);
+    console.log(err)
+    return next();
+  });
+});
+
+server.get('/subscription/:businessId/:subscriptionTypeId', function (req, res, next) {
+  let businessId = req.params.businessId;
+  let subscriptionTypeId = req.params.subscriptionTypeId;
+  return db.query('SELECT * FROM subscriptions where business_id='+businessId+' and subscription_type_id ='+ subscriptionTypeId +';')
+  .then((response)=>{
+    console.log(response)
+    res.send(response);
+    return next();
+  })
+  .catch((err) => {
+    res.send(err);
+    console.log(err)
+    return next();
+  });
 });
 
 server.get('/subscriptionType/:bussinessId/:subscriptionTypeId', function (req, res, next) {
@@ -100,17 +131,17 @@ server.get('/subscriptionType/:bussinessId/:subscriptionTypeId', function (req, 
 server.post('/subscriptionType/create', function (req, res, next) {
   if (req.body) {
     //body: name, cost, business_id, billing_type, create_date
-    // let name = req.params.name;
-    // let cost = req.params.cost;
-    // let businessId = req.params.bussinessId;
-    // let billingType = req.params.billingType;
-    // let createDate = moment().format('YYYY-MM-DD');
+     let name = req.params.name;
+     let cost = req.params.cost;
+     let businessId = req.params.bussinessId;
+     let billingType = req.params.billingType;
+     let createDate = moment().format('YYYY-MM-DD');
 
-    let name = 'bitch';
-    let cost = '100';
-    let businessId = '101';
-    let billingType = 'years';
-    let createDate = "2017-02-09";
+    //let name = 'bitch';
+    //let cost = '100';
+    //let businessId = '101';
+    //let billingType = 'years';
+    //let createDate = "2017-02-09";
 
     return db.query('select * from bank.businesses where id = ' + businessId + ';')
       .then((response) => {
