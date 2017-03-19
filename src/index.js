@@ -47,7 +47,7 @@ server.post('/subscription/create', function (req, res, next) {
     let subscriptionObj = null;
     let userObj = null;
     let first_name = body.first_name;
-    let last_name = body.first_name;
+    let last_name = body.last_name;
     let email = body.email;
     let cc_number = body.cc_number;
     return db.query('SELECT * FROM subscriptions_type where id=2  and business_id=' + business_id + ";")
