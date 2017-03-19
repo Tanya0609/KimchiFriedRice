@@ -9,11 +9,12 @@ server.use(plugins.acceptParser(server.acceptable));
 server.use(plugins.queryParser());
 server.use(plugins.bodyParser());
 
-server.get('/echo/:name', function (req, res, next) {
-  res.send(req.params);
-  return next();
-});
-
 server.listen(8080, function () {
   console.log('%s listening at %s', server.name, server.url);
+});
+
+server.get('/subscription/:subscriptionId', function (req, res, next) {
+  console.log(req.params.subscriptionId);
+  res.send(req.params);
+  return next();
 });
