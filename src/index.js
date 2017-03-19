@@ -42,8 +42,7 @@ server.get('/subscription/:subscriptionId', function (req, res, next) {
 //create a subscription record for user
 server.post('/subscription/create', function (req, res, next) {
   if (req.body) {
-    const body = req.body
-    //userId, bussinessId, type_id, date-created
+    const body = JSON.parse(req.body);
     let type_id = body.type_id;
     let business_id = body.business_id;
     let subscriptionObj = null;
@@ -192,7 +191,7 @@ server.get('/subscriptions/:businessId', function (req, res, next) {
     });
 });
 
-//check if login information correct 
+//check if login information correct
 server.get('/login/:email/:password', function (req, res, next) {
   const {email, password} = req.params;
   const queryString = `SELECT id FROM businesses WHERE email='${email}' AND password='${password}';`
