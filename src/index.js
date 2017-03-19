@@ -42,14 +42,14 @@ server.get('/subscription/:subscriptionId', function (req, res, next) {
 server.post('/subscription/create', function (req, res, next) {
   if (req.body) {
     //userId, bussinessId, type_id, date-created
-    let type_id = 2;
-    let business_id = 101;
+    let type_id = req.body.type_id;
+    let business_id = req.body.business_id;
     let subscriptionObj = null;
     let userObj = null;
-    let first_name = "Test";
-    let last_name = "Test";
-    let email = "amwa@123.ccom";
-    let cc_number = 123;
+    let first_name = req.body.first_name;
+    let last_name =  req.body.first_name;
+    let email =  req.body.email;
+    let cc_number =  req.body.cc_number;
     return db.query('SELECT * FROM subscriptions_type where id=2  and business_id=' + business_id + ";")
       .then((response) => {
         if (response.length == 1) {
