@@ -47,9 +47,9 @@ server.post('/subscription/create', function (req, res, next) {
     let subscriptionObj = null;
     let userObj = null;
     let first_name = req.body.first_name;
-    let last_name =  req.body.first_name;
-    let email =  req.body.email;
-    let cc_number =  req.body.cc_number;
+    let last_name = req.body.first_name;
+    let email = req.body.email;
+    let cc_number = req.body.cc_number;
     return db.query('SELECT * FROM subscriptions_type where id=2  and business_id=' + business_id + ";")
       .then((response) => {
         if (response.length == 1) {
@@ -89,20 +89,21 @@ server.post('/subscription/create', function (req, res, next) {
         return next();
       });
   }
+});
 //GET A LIST OF SUBSCRIBERS
 server.get('/subscription/:businessId', function (req, res, next) {
   let businessId = req.params.businessId;
-  return db.query('SELECT * FROM subscriptions where business_id='+businessId+';')
-  .then((response)=>{
-    console.log(response)
-    res.send(response);
-    return next();
-  })
-  .catch((err) => {
-    res.send(err);
-    console.log(err)
-    return next();
-  });
+  return db.query('SELECT * FROM subscriptions where business_id=' + businessId + ';')
+    .then((response) => {
+      console.log(response)
+      res.send(response);
+      return next();
+    })
+    .catch((err) => {
+      res.send(err);
+      console.log(err)
+      return next();
+    });
 });
 
 server.get('/subscriptionType/:bussinessId/:subscriptionTypeId', function (req, res, next) {
@@ -114,11 +115,11 @@ server.get('/subscriptionType/:bussinessId/:subscriptionTypeId', function (req, 
 server.post('/subscriptionType/create', function (req, res, next) {
   if (req.body) {
     //body: name, cost, business_id, billing_type, create_date
-     let name = req.params.name;
-     let cost = req.params.cost;
-     let businessId = req.params.bussinessId;
-     let billingType = req.params.billingType;
-     let createDate = moment().format('YYYY-MM-DD');
+    let name = req.params.name;
+    let cost = req.params.cost;
+    let businessId = req.params.bussinessId;
+    let billingType = req.params.billingType;
+    let createDate = moment().format('YYYY-MM-DD');
 
     //let name = 'bitch';
     //let cost = '100';
