@@ -124,6 +124,33 @@ server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next)
     });
 });
 
+//create bussiness record
+server.post('/company/create', function (req, res, next) {
+  if (req.body) {
+    //body: name, cost, business_id, billing_type, create_date
+    let name = req.params.name;
+    let email = req.params.email;
+    let password = req.params.password;
+
+    return db.query("select * from bank.businesses where name != '"+ name + "' and email != '" + email + "';")
+      .then((response) => {
+        console.log(response);
+    return db.query('insert into bank.businesses (name,email,password) values (' + name + '\',\'' + email + '\',\'' + password + '\');')
+})
+    .then(() => db.query("SELECT * FROM bank.businesses where name ='"+ name+ "' and email='" + email + "';"))
+    .then((response) => {
+        console.log(response);
+        res.send(response);
+        return next();
+      })
+      .catch((err) => {
+        res.send(err);
+        console.log(err)
+        return next();
+      });
+  }
+});
+
 server.post('/subscriptionType/create', function (req, res, next) {
   if (req.body) {
     //body: name, cost, business_id, billing_type, create_date
@@ -154,4 +181,3 @@ server.post('/subscriptionType/create', function (req, res, next) {
       });
   }
 });
-
