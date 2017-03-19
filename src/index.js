@@ -23,6 +23,7 @@ server.listen(8080, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
 
+// doing nothing
 server.get('/subscription/:subscriptionId', function (req, res, next) {
   let subscriptionId = req.params.subscriptionId;
   const queryString = `SELECT * FROM subscriptions where id=${subscriptionId};`
@@ -38,9 +39,10 @@ server.get('/subscription/:subscriptionId', function (req, res, next) {
     });
 });
 
+//create a subscription record for user
 server.post('/subscription/create', function (req, res, next) {
   if (req.body) {
-    const body = JSON.parse(req.body)
+    const body = req.body
     //userId, bussinessId, type_id, date-created
     let type_id = body.type_id;
     let business_id = body.business_id;
@@ -90,10 +92,11 @@ server.post('/subscription/create', function (req, res, next) {
       });
   }
 });
-//GET A LIST OF SUBSCRIBERS
+
+//GET A LIST OF SUBSCRIBERS for selected company
 server.get('/company/:businessId', function (req, res, next) {
   let businessId = req.params.businessId;
-  return db.query('SELECT * FROM subscriptions s, users u, subscriptions_type st where s.business_id=' + businessId + ' and u.id = s.user_id and s.subscription_type_id = st.id;')
+  return db.query('SELECT * FROM subscriptions s where s.business_id=' + businessId + ' left join users u on u.id = s.user_id left join subscription_type_id s on s.subscription_type_id = st.id;')
     .then((response) => {
       res.send(response);
       return next();
@@ -105,6 +108,7 @@ server.get('/company/:businessId', function (req, res, next) {
     });
 });
 
+//GET A LIST OF SUBSCRIBERS for specific subscriptions_type of selected company
 server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next) {
   let businessId = req.params.businessId;
   let subscriptionTypeId = req.params.subscriptionTypeId;
@@ -122,19 +126,18 @@ server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next)
     });
 });
 
-//create bussiness record
+//create a new bussiness record
 server.post('/company/create', function (req, res, next) {
   if (req.body) {
-    const body = JSON.parse(req.body);
-    const {name, email, password} = body;
+    const {name, email, password} = req.body;
     const queryString = `SELECT * FROM bank.businesses WHERE name <> '${name}' AND email <> '${email}';`
     return db.query(queryString)
       .then((response) => {
         const queryString = `INSERT INTO bank.businesses (name,email,password) VALUES ('${name}', '${email}', '${password}');`
-        return db.query(queryString)
-      })
-      .then(() => db.query(`SELECT * FROM bank.businesses where name ='${name}' AND email = '${email}';`))
-      .then((response) => {
+    return db.query(queryString)
+})
+    .then(() => db.query(`SELECT * FROM bank.businesses where name ='${name}' AND email = '${email}';`))
+    .then((response) => {
         res.send(response);
         return next();
       })
@@ -146,10 +149,10 @@ server.post('/company/create', function (req, res, next) {
   }
 });
 
+//when business creates a new subscriptionType
 server.post('/subscriptionType/create', function (req, res, next) {
   if (req.body) {
-    const body = JSON.parse(req.body);
-    const {name, cost, businessId, billingType} = body;
+    const {name, cost, businessId, billingType} = req.body;
     let createDate = moment().format('YYYY-MM-DD');
     const queryString = `SELECT * FROM bank.businesses WHERE id = ${businessId};`
     return db.query(queryString)
@@ -173,6 +176,7 @@ server.post('/subscriptionType/create', function (req, res, next) {
   }
 });
 
+// get a list of subscriptions of a business
 server.get('/subscriptions/:businessId', function (req, res, next) {
   let businessId = req.params.businessId;
   const queryString = `SELECT * FROM subscriptions_type WHERE business_id=${businessId};`
@@ -188,6 +192,7 @@ server.get('/subscriptions/:businessId', function (req, res, next) {
     });
 });
 
+//check if login information correct 
 server.get('/login/:email/:password', function (req, res, next) {
   const {email, password} = req.params;
   const queryString = `SELECT id FROM businesses WHERE email='${email}' AND password='${password}';`
