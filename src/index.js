@@ -149,7 +149,6 @@ server.post('/company/create', function (req, res, next) {
 });
 
 server.post('/subscriptionType/create', function (req, res, next) {
-  console.log('/subscriptionType/create', req)
   if (req.body) {
     const body = JSON.parse(req.body);
     const {name, cost, businessId, billingType} = body;
