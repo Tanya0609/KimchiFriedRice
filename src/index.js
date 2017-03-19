@@ -91,7 +91,7 @@ server.post('/subscription/create', function (req, res, next) {
   }
 });
 //GET A LIST OF SUBSCRIBERS
-server.get('/subscription/:businessId', function (req, res, next) {
+server.get('/company/:businessId', function (req, res, next) {
   let businessId = req.params.businessId;
   return db.query('SELECT * FROM subscriptions where business_id=' + businessId + ';')
     .then((response) => {
@@ -106,7 +106,7 @@ server.get('/subscription/:businessId', function (req, res, next) {
     });
 });
 
-server.get('/subscriptionType/:bussinessId/:subscriptionTypeId', function (req, res, next) {
+server.get('/company/:bussinessId/:subscriptionTypeId', function (req, res, next) {
   console.log(req.params.subscriptionTypeId, req.params.bussinessId);
   res.send(req.params);
   return next();
@@ -118,14 +118,8 @@ server.post('/subscriptionType/create', function (req, res, next) {
     let name = req.params.name;
     let cost = req.params.cost;
     let businessId = req.params.bussinessId;
-    let billingType = req.params.billingType;
+    let billingType = req.params.billingType; //weeks months or years
     let createDate = moment().format('YYYY-MM-DD');
-
-    //let name = 'bitch';
-    //let cost = '100';
-    //let businessId = '101';
-    //let billingType = 'years';
-    //let createDate = "2017-02-09";
 
     return db.query('select * from bank.businesses where id = ' + businessId + ';')
       .then((response) => {
