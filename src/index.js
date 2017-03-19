@@ -17,6 +17,7 @@ const server = restify.createServer({
 server.use(plugins.acceptParser(server.acceptable));
 server.use(plugins.queryParser());
 server.use(plugins.bodyParser());
+server.use(restify.CORS());
 
 server.listen(8080, function () {
   console.log('%s listening at %s', server.name, server.url);
