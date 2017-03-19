@@ -93,7 +93,7 @@ server.post('/subscription/create', function (req, res, next) {
 //GET A LIST OF SUBSCRIBERS
 server.get('/company/:businessId', function (req, res, next) {
   let businessId = req.params.businessId;
-  return db.query('SELECT * FROM subscriptions where business_id=' + businessId + ';')
+  return db.query('SELECT * FROM subscriptions s, users u, subscriptions_type st where s.business_id=' + businessId + ' and u.id = s.user_id and s.subscription_type_id = st.id;')
     .then((response) => {
       console.log(response)
       res.send(response);
@@ -107,9 +107,22 @@ server.get('/company/:businessId', function (req, res, next) {
 });
 
 server.get('/company/:bussinessId/:subscriptionTypeId', function (req, res, next) {
-  console.log(req.params.subscriptionTypeId, req.params.bussinessId);
-  res.send(req.params);
-  return next();
+  console.log(req.params);
+  let businessId =  req.params.businessId;
+  let subscriptionType = parseInt(req.params.subscriptionTypeId);
+  // console.log(req.params, businessId, subscription_type_id);
+
+  return db.query('SELECT * FROM subscriptions s, users u where s.subscription_type_id='+subscriptionType+' and s.business_id=' + businessId + ' and u.id = s.user_id;')
+    .then((response) => {
+      console.log(response)
+      res.send(response);
+      return next();
+    })
+    .catch((err) => {
+      res.send(err);
+      console.log(err)
+      return next();
+    });
 });
 
 server.post('/subscriptionType/create', function (req, res, next) {
@@ -142,3 +155,4 @@ server.post('/subscriptionType/create', function (req, res, next) {
       });
   }
 });
+
