@@ -106,13 +106,12 @@ server.get('/company/:businessId', function (req, res, next) {
     });
 });
 
-server.get('/company/:bussinessId/:subscriptionTypeId', function (req, res, next) {
-  console.log(req.params);
-  let businessId =  req.params.businessId;
+server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next) {
+  let businessId = req.params.businessId;
   let subscriptionType = parseInt(req.params.subscriptionTypeId);
-  // console.log(req.params, businessId, subscription_type_id);
 
-  return db.query('SELECT * FROM subscriptions s, users u where s.subscription_type_id='+subscriptionType+' and s.business_id=' + businessId + ' and u.id = s.user_id;')
+  return db.query('SELECT * FROM subscriptions s, users u, subscriptions_type st where s.business_id='
+    + businessId + ' and subscription_type_id='+subscriptionType+' and u.id = s.user_id and s.subscription_type_id = st.id;')
     .then((response) => {
       console.log(response)
       res.send(response);
