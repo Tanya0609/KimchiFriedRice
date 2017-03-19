@@ -20,6 +20,7 @@
   "homepage": "https://github.com/lykfe/KimchiFriedRice#readme",
   "dependencies": {
     "pg-promise": "^5.6.4",
-    "restify": "^4.3.0"
+    "restify": "^4.3.0",
+    "restify-plugins": "^1.5.1"
   }
 }
