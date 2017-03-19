@@ -18,3 +18,18 @@ server.get('/subscription/:subscriptionId', function (req, res, next) {
   res.send(req.params);
   return next();
 });
+
+
+server.get('/subscriptionType/:subscriptionTypeId', function (req, res, next) {
+  console.log(req.params.subscriptionTypeId);
+  res.send(req.params);
+  return next();
+});
+
+server.post('/subscriptionType/create', function (req, res, next) {
+  if (req.body) {
+    console.log(req.body);
+    res.send(req.params);
+    return next();
+  }
+});
