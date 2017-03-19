@@ -1,0 +1,4 @@
+# KimchiFriedRice
+
+This is a KIMCHI FRIED RICE!
+YEAHHHH STIR THAT GOODNESS
