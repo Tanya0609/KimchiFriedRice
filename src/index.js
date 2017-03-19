@@ -1,3 +1,12 @@
+var pgp = require('pg-promise')();
+var cn = {
+    host: 'kfr-78d8gx42.cloudapp.net',
+    port: 26257,
+    database: 'bank',
+    user: 'root'
+};
+var db = pgp(cn);
+
 var restify = require('restify');
 var plugins = require('restify-plugins');
 
@@ -14,22 +23,24 @@ server.listen(8080, function () {
 });
 
 server.get('/subscription/:subscriptionId', function (req, res, next) {
-  console.log(req.params.subscriptionId);
-  res.send(req.params);
-  return next();
+  let subscriptionId = req.params.subscriptionId;
+  return db.query('SELECT * FROM subscriptions where id='+subscriptionId+';')
+  .then((response)=>{
+    console.log(response)
+    console.log(req.params.subscriptionId);
+    res.send(response);
+
+      return next();
+  })
+  .catch((err) => {
+    res.send(err);
+    console.log(err)
+      return next();
+  });
+
 });
 
+console.log('hello world')
 
-server.get('/subscriptionType/:subscriptionTypeId', function (req, res, next) {
-  console.log(req.params.subscriptionTypeId);
-  res.send(req.params);
-  return next();
-});
 
-server.post('/subscriptionType/create', function (req, res, next) {
-  if (req.body) {
-    console.log(req.body);
-    res.send(req.params);
-    return next();
-  }
-});
+//var columns = ['id'];
