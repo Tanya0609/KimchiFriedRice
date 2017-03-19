@@ -95,7 +95,7 @@ server.post('/subscription/create', function (req, res, next) {
 //GET A LIST OF SUBSCRIBERS for selected company
 server.get('/company/:businessId', function (req, res, next) {
   let businessId = req.params.businessId;
-  return db.query('SELECT * FROM subscriptions s where s.business_id=' + businessId + ' left join users u on u.id = s.user_id left join subscription_type_id s on s.subscription_type_id = st.id;')
+  return db.query('SELECT * FROM subscriptions s, users u, subscriptions_type st WHERE s.business_id=' + businessId + ' and u.id = s.user_id and s.subscription_type_id = st.id;')
     .then((response) => {
       res.send(response);
       return next();
