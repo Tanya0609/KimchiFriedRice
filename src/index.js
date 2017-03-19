@@ -25,7 +25,8 @@ server.listen(8080, function () {
 
 server.get('/subscription/:subscriptionId', function (req, res, next) {
   let subscriptionId = req.params.subscriptionId;
-  return db.query('SELECT * FROM subscriptions where id=' + subscriptionId + ';')
+  const queryString = `SELECT * FROM subscriptions where id=${subscriptionId};`
+  return db.query(queryString)
     .then((response) => {
       console.log(response)
       console.log(req.params.subscriptionId);
@@ -168,7 +169,8 @@ server.post('/subscriptionType/create', function (req, res, next) {
       })
       .then((response) => {
         console.log(response, "here");
-        return db.query('SELECT * FROM bank.subscriptions_type where business_id= ' + businessId + ' and name = \'' + name + '\' and cost = ' + cost + ' and billing_type = \'' + billingType + '\';')
+        const queryString = `SELECT * FROM bank.subscriptions_type where business_id= ${businessId} and name = '${name}' and cost = '${cost}' and billing_type = '${billingType}';`
+        return db.query(queryString);
       })
       .then((response) => {
         console.log(response)
@@ -181,4 +183,36 @@ server.post('/subscriptionType/create', function (req, res, next) {
         return next();
       });
   }
+});
+
+server.get('/subscriptions/:businessId', function (req, res, next) {
+  let businessId = req.params.businessId;
+  const queryString = `SELECT * FROM subscriptions_type WHERE business_id=${businessId};`
+  return db.query(queryString)
+    .then((response) => {
+      console.log(response)
+      res.send(response);
+      return next();
+    })
+    .catch((err) => {
+      res.send(err);
+      console.log(err)
+      return next();
+    });
+});
+
+server.get('/login/:email/:password', function (req, res, next) {
+  const {email, password} = req.params;
+  const queryString = `SELECT id FROM businesses WHERE email='${email}' AND password='${password}';`
+  return db.query(queryString)
+    .then((response) => {
+      console.log(response)
+      res.send(response);
+      return next();
+    })
+    .catch((err) => {
+      res.send(err);
+      console.log(err)
+      return next();
+    });
 });
