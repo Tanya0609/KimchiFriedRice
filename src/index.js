@@ -125,15 +125,18 @@ server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next)
 //create bussiness record
 server.post('/company/create', function (req, res, next) {
   if (req.body) {
-    const {name, email, password} = req.body;
+    //const {name, email, password} = req.body;
+    let name = req.body.name;
+    let email = req.body.email;
+    let password = req.body.password;
     const queryString = `SELECT * FROM bank.businesses WHERE name <> '${name}' AND email <> '${email}';`
     return db.query(queryString)
       .then((response) => {
         const queryString = `INSERT INTO bank.businesses (name,email,password) VALUES ('${name}', '${email}', '${password}');`
-    return db.query(queryString)
-})
-    .then(() => db.query(`SELECT * FROM bank.businesses where name ='${name}' AND email = '${email}';`))
-    .then((response) => {
+        return db.query(queryString)
+      })
+      .then(() => db.query(`SELECT * FROM bank.businesses where name ='${name}' AND email = '${email}';`))
+      .then((response) => {
         res.send(response);
         return next();
       })
@@ -146,8 +149,10 @@ server.post('/company/create', function (req, res, next) {
 });
 
 server.post('/subscriptionType/create', function (req, res, next) {
+  console.log('/subscriptionType/create', req)
   if (req.body) {
-    const {name, cost, businessId, billingType} = req.body;
+    const body = JSON.parse(req.body);
+    const {name, cost, businessId, billingType} = body;
     let createDate = moment().format('YYYY-MM-DD');
     const queryString = `SELECT * FROM bank.businesses WHERE id = ${businessId};`
     return db.query(queryString)
