@@ -30,6 +30,6 @@
   },
   "engineStrict" : true,
   "engines" : { 
-    "node" : ">=7.7.3" 
+    "node" : "^7.7.3" 
   }
 }
