@@ -40,7 +40,7 @@ server.get('/subscription/:subscriptionId', function (req, res, next) {
 
 server.post('/subscription/create', function (req, res, next) {
   if (req.body) {
-    const body = req.body
+    const body = JSON.parse(req.body)
     //userId, bussinessId, type_id, date-created
     let type_id = body.type_id;
     let business_id = body.business_id;
@@ -125,10 +125,8 @@ server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next)
 //create bussiness record
 server.post('/company/create', function (req, res, next) {
   if (req.body) {
-    //const {name, email, password} = req.body;
-    let name = req.body.name;
-    let email = req.body.email;
-    let password = req.body.password;
+    const body = JSON.parse(req.body);
+    const {name, email, password} = body;
     const queryString = `SELECT * FROM bank.businesses WHERE name <> '${name}' AND email <> '${email}';`
     return db.query(queryString)
       .then((response) => {
