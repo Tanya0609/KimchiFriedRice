@@ -28,10 +28,7 @@ server.get('/subscription/:subscriptionId', function (req, res, next) {
   const queryString = `SELECT * FROM subscriptions where id=${subscriptionId};`
   return db.query(queryString)
     .then((response) => {
-      console.log(response)
-      console.log(req.params.subscriptionId);
       res.send(response);
-
       return next();
     })
     .catch((err) => {
@@ -43,15 +40,16 @@ server.get('/subscription/:subscriptionId', function (req, res, next) {
 
 server.post('/subscription/create', function (req, res, next) {
   if (req.body) {
+    const body = req.body
     //userId, bussinessId, type_id, date-created
-    let type_id = req.body.type_id;
-    let business_id = req.body.business_id;
+    let type_id = body.type_id;
+    let business_id = body.business_id;
     let subscriptionObj = null;
     let userObj = null;
-    let first_name = req.body.first_name;
-    let last_name = req.body.first_name;
-    let email = req.body.email;
-    let cc_number = req.body.cc_number;
+    let first_name = body.first_name;
+    let last_name = body.first_name;
+    let email = body.email;
+    let cc_number = body.cc_number;
     return db.query('SELECT * FROM subscriptions_type where id=2  and business_id=' + business_id + ";")
       .then((response) => {
         if (response.length == 1) {
@@ -97,7 +95,6 @@ server.get('/company/:businessId', function (req, res, next) {
   let businessId = req.params.businessId;
   return db.query('SELECT * FROM subscriptions s, users u, subscriptions_type st where s.business_id=' + businessId + ' and u.id = s.user_id and s.subscription_type_id = st.id;')
     .then((response) => {
-      console.log(response)
       res.send(response);
       return next();
     })
@@ -110,12 +107,11 @@ server.get('/company/:businessId', function (req, res, next) {
 
 server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next) {
   let businessId = req.params.businessId;
-  let subscriptionType = parseInt(req.params.subscriptionTypeId);
+  let subscriptionTypeId = req.params.subscriptionTypeId;
 
   return db.query('SELECT * FROM subscriptions s, users u, subscriptions_type st where s.business_id='
-    + businessId + ' and subscription_type_id='+subscriptionType+' and u.id = s.user_id and s.subscription_type_id = st.id;')
+    + businessId + ' and subscription_type_id='+subscriptionTypeId+' and u.id = s.user_id and s.subscription_type_id = st.id;')
     .then((response) => {
-      console.log(response)
       res.send(response);
       return next();
     })
@@ -129,19 +125,15 @@ server.get('/company/:businessId/:subscriptionTypeId', function (req, res, next)
 //create bussiness record
 server.post('/company/create', function (req, res, next) {
   if (req.body) {
-    //body: name, cost, business_id, billing_type, create_date
-    let name = req.params.name;
-    let email = req.params.email;
-    let password = req.params.password;
-
-    return db.query("select * from bank.businesses where name != '"+ name + "' and email != '" + email + "';")
+    const {name, email, password} = req.body;
+    const queryString = `SELECT * FROM bank.businesses WHERE name <> '${name}' AND email <> '${email}';`
+    return db.query(queryString)
       .then((response) => {
-        console.log(response);
-    return db.query('insert into bank.businesses (name,email,password) values (' + name + '\',\'' + email + '\',\'' + password + '\');')
+        const queryString = `INSERT INTO bank.businesses (name,email,password) VALUES ('${name}', '${email}', '${password}');`
+    return db.query(queryString)
 })
-    .then(() => db.query("SELECT * FROM bank.businesses where name ='"+ name+ "' and email='" + email + "';"))
+    .then(() => db.query(`SELECT * FROM bank.businesses where name ='${name}' AND email = '${email}';`))
     .then((response) => {
-        console.log(response);
         res.send(response);
         return next();
       })
@@ -155,25 +147,19 @@ server.post('/company/create', function (req, res, next) {
 
 server.post('/subscriptionType/create', function (req, res, next) {
   if (req.body) {
-    //body: name, cost, business_id, billing_type, create_date
-    let name = req.params.name;
-    let cost = req.params.cost;
-    let businessId = req.params.bussinessId;
-    let billingType = req.params.billingType; //weeks months or years
+    const {name, cost, businessId, billingType} = req.body;
     let createDate = moment().format('YYYY-MM-DD');
-
-    return db.query('select * from bank.businesses where id = ' + businessId + ';')
+    const queryString = `SELECT * FROM bank.businesses WHERE id = ${businessId};`
+    return db.query(queryString)
       .then((response) => {
-        console.log(response);
-        return db.query('insert into bank.subscriptions_type (business_id,name,cost,create_date,billing_type) values (' + businessId + ',\'' + name + '\',' + cost + ',\'' + createDate + '\',\'' + billingType + '\');')
+        const queryString = `INSERT INTO bank.subscriptions_type (business_id,name,cost,create_date,billing_type) values (${businessId},'${name}',${cost},'${createDate}','${billingType}');`
+        return db.query(queryString)
       })
       .then((response) => {
-        console.log(response, "here");
-        const queryString = `SELECT * FROM bank.subscriptions_type where business_id= ${businessId} and name = '${name}' and cost = '${cost}' and billing_type = '${billingType}';`
+        const queryString = `SELECT * FROM bank.subscriptions_type where business_id= ${businessId} and name = '${name}' and cost = ${cost} and billing_type = '${billingType}';`
         return db.query(queryString);
       })
       .then((response) => {
-        console.log(response)
         res.send(response);
         return next();
       })
@@ -190,7 +176,6 @@ server.get('/subscriptions/:businessId', function (req, res, next) {
   const queryString = `SELECT * FROM subscriptions_type WHERE business_id=${businessId};`
   return db.query(queryString)
     .then((response) => {
-      console.log(response)
       res.send(response);
       return next();
     })
@@ -206,7 +191,6 @@ server.get('/login/:email/:password', function (req, res, next) {
   const queryString = `SELECT id FROM businesses WHERE email='${email}' AND password='${password}';`
   return db.query(queryString)
     .then((response) => {
-      console.log(response)
       res.send(response);
       return next();
     })
